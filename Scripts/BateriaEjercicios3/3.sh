@@ -44,8 +44,6 @@
 # 25.26.28.1 h5
 
 # TODO:
-# - Mejorar incrementar_ip para parsear la ip en lugar de tener que pasar
-#   los octetos
 # - Guardar los primeros cuatro parámetros en un array, así será más sencillo
 #   parsear la ip?
 
@@ -54,7 +52,7 @@ function existe_ip_en_archivo()
 	ip=$1
 	archivo=$2
 	while IFS= read -r line; do
-		if [ "$ip" == "$(echo $line | awk '{ print $1 }')" ]; then
+		if [ "$ip" == "$(echo $line | cut -d " " -f 1)" ]; then
 			return 1
 		fi
 	done < $archivo
@@ -66,7 +64,7 @@ function existe_host_en_archivo()
 	host=$1
 	archivo=$2
 	while IFS= read -r line; do
-		if [ "$host" == "$(echo $line | awk '{ print $2 }')" ]; then
+		if [ "$host" == "$(echo $line | cut -d " " -f 2)" ]; then
 			return 1
 		fi
 	done < $archivo
@@ -75,10 +73,10 @@ function existe_host_en_archivo()
 
 function incrementar_ip()
 {
-	octeto1=$1
-	octeto2=$2
-	octeto3=$3
-	octeto4=$4
+	octeto1=$(echo $1 | cut -d "." -f 1)
+	octeto2=$(echo $1 | cut -d "." -f 2)
+	octeto3=$(echo $1 | cut -d "." -f 3)
+	octeto4=$(echo $1 | cut -d "." -f 4)
 
 	((octeto4++))
 	if [ $octeto4 -gt 255 ]; then
@@ -108,7 +106,7 @@ function escribir_en_archivo()
 		if [ $? -eq 0 ]; then
 			break
 		fi
-		incrementar_ip $octeto1 $octeto2 $octeto3 $octeto4
+		incrementar_ip $ip
 	done
 	existe_host_en_archivo $host $archivo
 	if [ $? -ne 0 ]; then
