@@ -45,7 +45,7 @@ case $1 in
 		for i in $@; do
 			# https://www.ibm.com/docs/no/aix/7.2?topic=l-ls-command#ls_command__title__5
 			# El tercero es la columna del propietario
-			ls -l $i | awk '{ print $3 }'
+			ls -l $i | cut -d " " -f 3
 		done
 		;;
 	*)
