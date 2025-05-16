@@ -24,34 +24,14 @@
 
 function generar_usuario()
 {
-	IFS=:
-
-	counter=1
-	for i in $1; do
-		case $counter in
-			1)
-				ap1=$(echo "$i" | cut -c 1-3)
-				;;
-			2)
-				ap2=$(echo "$i" | cut -c 1-3)
-				;;
-			3)
-				letra=$(echo "$i" | cut -c 1)
-				;;
-			4)
-				num=$(echo "$i" | cut -c 1-3)
-				;;
-		esac
-		((counter++))
-	done
+	letra=$(echo $1 | cut -d ":" -f 3 | cut -b 1-1)
+	ap1=$(echo $1 | cut -d ":" -f 1 | cut -b 1-3)
+	ap2=$(echo $1 | cut -d ":" -f 2 | cut -b 1-3)
+	num=$(echo $1 | cut -d ":" -f 4 | cut -b 6-8)
 	# Convertir a minúsculas
 	# https://stackoverflow.com/a/2264537
 	usuario=$(echo "$letra$ap1$ap2$num" | tr '[:upper:]' '[:lower:]')
 	echo $usuario
-
-	# Restablezco el delimitador, porque sino no obtiene los datos de los demás
-	# usuarios correctamente
-	IFS=
 }
 
 if [ $# -eq 0 ]; then
@@ -66,8 +46,6 @@ if ! [ -e $archivo ]; then
 	exit 1
 fi
 
-# https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
-# Para leer un archivo línea por línea
-while IFS= read -r line; do
-	generar_usuario $line
-done < $archivo
+for i in $(cat $archivo); do
+	generar_usuario $i
+done

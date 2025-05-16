@@ -46,7 +46,7 @@ function visualizar_permisos()
 		return
 	fi
 
-	ls -l $(dirname $1) | grep $(basename $1) | awk '{ print $1 }'
+	ls -la $(dirname $1) | grep $(basename $1) | cut -d " " -f 1
 }
 
 function mostrar_menu()

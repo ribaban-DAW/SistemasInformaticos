@@ -51,11 +51,11 @@ function existe_ip_en_archivo()
 {
 	ip=$1
 	archivo=$2
-	while IFS= read -r line; do
+	for line in $(cat $archivo); do
 		if [ "$ip" == "$(echo $line | cut -d " " -f 1)" ]; then
 			return 1
 		fi
-	done < $archivo
+	done
 	return 0
 }
 
@@ -63,11 +63,11 @@ function existe_host_en_archivo()
 {
 	host=$1
 	archivo=$2
-	while IFS= read -r line; do
+	for line in $(cat $archivo); do
 		if [ "$host" == "$(echo $line | cut -d " " -f 2)" ]; then
 			return 1
 		fi
-	done < $archivo
+	done
 	return 0
 }
 
