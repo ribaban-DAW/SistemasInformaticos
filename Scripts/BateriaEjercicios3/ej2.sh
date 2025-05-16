@@ -1,1 +1,1 @@
-/home/ribana-b/DAW/SistemasInformaticos/Scripts/BateriaEjercicios3/2.sh
+2.sh
