@@ -91,8 +91,11 @@ function incrementar_ip()
 		((octeto1++))
 		octeto2=0
 	fi
+	if [ $octeto1 -gt 255 ]; then
+		octeto1=0
+	fi
+
 	ip="$octeto1.$octeto2.$octeto3.$octeto4"
-	return 0
 }
 
 function escribir_en_archivo()
@@ -101,13 +104,19 @@ function escribir_en_archivo()
 	host=$2
 	archivo=$3
 
+	ip_original=$ip
 	while true; do
 		existe_ip_en_archivo $ip $archivo
 		if [ $? -eq 0 ]; then
 			break
 		fi
 		incrementar_ip $ip
+		if [ $ip == $ip_original ]; then
+			echo "Todas las IPs han sido utilizadas"
+			exit 1
+		fi
 	done
+
 	existe_host_en_archivo $host $archivo
 	if [ $? -ne 0 ]; then
 		echo "[$(date)] Error añadiendo host '$host'" >> errores.log
